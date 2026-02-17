@@ -39,7 +39,7 @@ for l in links:
     print(l) 
 
 
-print("Total de links:", len(links))  
+print("Total links:", len(links))  
 
 
 ### PLAN 2: (GET THE INFORMATION FROM EACH CARD AND FILL IN A SPREADSHEET)
