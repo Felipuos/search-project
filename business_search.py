@@ -92,7 +92,7 @@ for l in links:
                 print(f"contact: {contact}")
                 print(f'assessment: {assessment}')
 
-                enviar = requests.post(webhook,
+                post = requests.post(webhook,
                                        json= {
                                            "name":name,
                                            "address":address,
