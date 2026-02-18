@@ -8,7 +8,7 @@ import requests
 
 
 ### PLAN 1: (FETCH THE LINK OF ALL BUSINESSES ON GOOGLE MAPS)
-@ -16,21 +19,21 @@ driver = webdriver.Chrome(service=services)
+driver = webdriver.Chrome(service=services)
 driver.get(f"https://www.google.com.br/maps/search/{search}")
 time.sleep(5) 
 
@@ -35,7 +35,7 @@ for article in articles:
         links.append(link)
     except:
         pass
-@ -40,8 +43,70 @@ for l in links:
+for l in links:
 
 
 print("Total links:", len(links))  
