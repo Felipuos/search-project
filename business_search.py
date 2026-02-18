@@ -1,3 +1,4 @@
+from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
@@ -8,43 +9,44 @@ import requests
 
 
 ### PLAN 1: (FETCH THE LINK OF ALL BUSINESSES ON GOOGLE MAPS)
-driver = webdriver.Chrome(service=services)
+
+search = input("Say a niche and a city: " )
+webhook = input("provide a webhook to receive the information: ")
+search = search.replace(" ", "+")
+services = Service(ChromeDriverManager().install())
+driver = webdriver.Chrome(service=services) 
+
 driver.get(f"https://www.google.com.br/maps/search/{search}")
 time.sleep(5) 
 
-painel = driver.find_element(By.XPATH, '//div[@role="feed"]')
 panel = driver.find_element(By.XPATH, '//div[@role="feed"]')
 
 for _ in range(10):
     
-    driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight", painel) #simulate a mouse scroll to load all results
     driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight", panel) #simulate a mouse scroll to load all results
     time.sleep(2)
 
 # Get all the articles in the HTML that are the business listing boxes
-artigos = driver.find_elements(By.CSS_SELECTOR, 'div[role="article"]')
 articles = driver.find_elements(By.CSS_SELECTOR, 'div[role="article"]')
 
 links = []
 
-for artigo in artigos: 
 for article in articles: 
     try:
-        link = artigo.find_element(By.TAG_NAME, "a").get_attribute("href") # find the "a" tag and get the href where the links to the business cards are
         link = article.find_element(By.TAG_NAME, "a").get_attribute("href") # find the "a" tag and get the href where the links to the business cards are
         links.append(link)
     except:
         pass
+
 for l in links:
+    print(l) 
 
 
 print("Total links:", len(links))  
-
 wait = WebDriverWait(driver, 10)
 
 ### PLAN 2: (GET THE INFORMATION FROM EACH CARD AND FILL IN A SPREADSHEET)
 
-# loading....
 for l in links:
         try:
                 driver.get(l)
@@ -90,7 +92,7 @@ for l in links:
                 print(f"contact: {contact}")
                 print(f'assessment: {assessment}')
 
-                enviar = requests.post("https://teste-n8n.rcjgun.easypanel.host/webhook/e36ed4a3-7f13-411c-a8df-40dce34dd244",
+                enviar = requests.post(webhook,
                                        json= {
                                            "name":name,
                                            "address":address,
@@ -103,6 +105,7 @@ for l in links:
         except Exception as e:
             print("Unexpected error in the main process:", e)
             print("Error captured:", e)
+
 
 
 
